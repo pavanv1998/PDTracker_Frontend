@@ -64,11 +64,13 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
             }
         });
 
-    }, [selectedTask])  
+    }, [selectedTask])
 
     const onFPSCalculation = (fps) => {
         setVideoReady(true);
     }
+
+    
 
     const handleProcessing = (jsonFileUploaded, jsonContent) => {
         if (jsonFileUploaded && jsonContent !== null) {
@@ -92,7 +94,7 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
                         peaks: jsonContent.peaks,
                         valleys_start: jsonContent.valleys_start,
                         valleys_end: jsonContent.valleys_end,
-                        valleys : jsonContent.valleys
+                        valleys: jsonContent.valleys
 
                     };
                 }
@@ -125,7 +127,7 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
 
                 //console.log("task record is :: " + taskRecord);
 
-                setTaskToPlotMap({...taskToPlotMap,selectedTask : updatedRecord});
+                setTaskToPlotMap({ ...taskToPlotMap, selectedTask: updatedRecord });
 
             } else {
                 console.log("Error while reading the json content of graph");
@@ -136,7 +138,7 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
             // console.log("now the taskRecord is :: " + taskRecord.peaks)
             // console.log("now the taskRecord is :: " + taskRecord.valleys)
             // console.log("radar is " + taskRecord.radar)
-            setDataReady(true); 
+            setDataReady(true);
         } else {
             //setDataReady(true);
         }
@@ -164,11 +166,11 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
                         setFileName={setFileName}
                         setVideoURL={setVideoURL}
                         landMarks={landMarks}
-                        setTaskBoxes={() => {}}
+                        setTaskBoxes={() => { }}
                         selectedTask={selectedTask}
                     />
                 </div>
-                
+
                 <div className={"flex flex-col min-h-[100vh] w-1/2 overflow-auto"}>
                     <HeaderSection title={"Task Details"} isVideoReady={videoReady} fileName={fileName} fps={fps} boundingBoxes={boundingBoxes} taskBoxes={taskBoxes} />
 
@@ -184,6 +186,7 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
                                 tasks.map((task, index) => <option key={index} value={index}>{task.name}</option>)
                             }
                         </select>
+                        
                     </div>
 
                     {/*<PlotWidget  taskRecord={taskData} />*/}
@@ -195,7 +198,7 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
                         <div className={"flex justify-center items-center h-full flex-col gap-4 w-full px-10 flex-1 py-4 overflow-y-scroll  "}>
                             <div>Analyse the task</div>
                             <Button variant="contained" onClick={() => { setOpenJsonUpload(true) }}>Analyse</Button>
-                            <JSONUploadDialog dialogOpen={openJsonUpload} fps={fps} setDialogOpen={setOpenJsonUpload} handleJSONUpload={handleProcessing} boundingBoxes={boundingBoxes} videoRef={videoRef} tasks={tasks} selectedTask={selectedTask}/>
+                            <JSONUploadDialog dialogOpen={openJsonUpload} fps={fps} setDialogOpen={setOpenJsonUpload} handleJSONUpload={handleProcessing} boundingBoxes={boundingBoxes} videoRef={videoRef} tasks={tasks} selectedTask={selectedTask} />
                         </div>
 
                     }

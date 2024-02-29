@@ -7,6 +7,7 @@ import wavesData from "./waveData.json";
 import peaksData from "./peaks.json";
 import scatterPlotData from "./scatterPlot.json";
 import PlotWidget from "./PlotWidget.js";
+import {RestartAlt, TouchApp} from '@mui/icons-material';
 
 const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoData, boundingBoxes, setBoundingBoxes, setElement, taskBoxes, fps, setFPS }) => {
     const videoRef = useRef(null);
@@ -21,6 +22,7 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
     const [taskToPlotMap, setTaskToPlotMap] = useState({});
     const [landMarks, setLandMarks] = useState([]);
     const [normalizationLandMarks, setNormalizationLandMarks] = useState([]);
+    const [normalizationFactor, setNormalizationFactor] = useState();
     const tasks = taskBoxes;
 
     useEffect(() => {
@@ -99,6 +101,14 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
                     setNormalizationLandMarks(jsonContent.normalization_landmarks);
                 }
 
+                if (jsonContent.hasOwnProperty("normalization_factor")) {
+                    updatedRecord = {
+                        ...updatedRecord,
+                        normalization_factor: jsonContent.normalization_factor
+                    };
+                    setNormalizationFactor(jsonContent.normalization_factor);
+                }
+
 
                 //console.log("updated record is :: " + updatedRecord);
 
@@ -129,7 +139,8 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
                 end_time: taskData.end,
                 fps: fps,
                 landmarks: taskToPlotMap[selectedTaskName].landMarks,
-                normalization_landmarks: taskToPlotMap[selectedTaskName].normalizationLandMarks
+                normalization_landmarks: taskToPlotMap[selectedTaskName].normalizationLandMarks,
+                normalization_factor : taskToPlotMap[selectedTaskName].normalization_factor
             };
 
             jsonData = JSON.stringify(jsonData);
@@ -155,6 +166,15 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
             }
         } catch (error) {
             console.error("Failed to fetch projects:", error);
+        }
+    }
+
+    const resetTask = () => {
+        let newTaskToPlotMap = {...taskToPlotMap};
+
+        if (newTaskToPlotMap.hasOwnProperty(selectedTaskName)) {
+            newTaskToPlotMap[selectedTaskName] = null;
+            setTaskToPlotMap(newTaskToPlotMap);
         }
     }
 
@@ -210,6 +230,12 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
                                 tasks.map((task, index) => <option key={index} value={index}>{task.name}</option>)
                             }
                         </select>
+                        <button
+                            className={"p-2 pl-2 px-4 rounded-md bg-blue-600 text-white font-bold flex flex-row gap-2"}
+                            onClick={resetTask}
+                        >
+                         <RestartAlt/> Reset
+                        </button>
                     </div>
 
 
