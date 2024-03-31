@@ -216,7 +216,7 @@ export default function JSONUploadDialog({dialogOpen, setDialogOpen, handleJSONU
 
             uploadData.append('json_data', jsonData);
 
-            let apiURL = "";
+            let apiURL = "http://localhost:8000/api/leg_raise/";
             if (taskData.name.includes("Leg agility"))
                 apiURL = "http://localhost:8000/api/leg_raise/";
             else if (taskData.name.includes("Toe tapping"))

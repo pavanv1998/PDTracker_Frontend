@@ -12,7 +12,6 @@ const WrapperPage = ({page}) => {
     useEffect(() => {
         const url = videoData ? URL.createObjectURL(videoData) : '';
         setVideoURL(url);
-
     }, [videoData, componentInfo]);
 
 

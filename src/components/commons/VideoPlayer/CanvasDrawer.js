@@ -1,3 +1,5 @@
+import {rgb} from "plotly.js/src/components/color";
+
 export class CanvasDrawer {
     constructor(videoElement, canvasElement, boundingBoxes, fps, persons, zoomLevel, screen, taskBoxes, setTaskBoxes, selectedTask, landMarks, setLandMarks) {
         this.videoElement = videoElement;
@@ -65,11 +67,29 @@ export class CanvasDrawer {
 
             const landMark = this.getCurrentLandMark();
             if (landMark !== null && Array.isArray(landMark) && landMark.length >= 2) {
-                this.canvasContext.beginPath();
-                this.canvasContext.fillStyle = 'green';
-                this.canvasContext.lineWidth = 8;
-                this.canvasContext.fillRect(landMark[0] + boundingBox.x - 25, landMark[1] + boundingBox.y - 25, 50, 50);
-                this.canvasContext.stroke();
+                if (Array.isArray(landMark[0])) {
+                    for (let mark of landMark) {
+
+                        this.canvasContext.fillStyle = "rgba(255, 0, 0, 1)";
+                        this.canvasContext.beginPath();
+
+                        // this.canvasContext.lineWidth = 8;
+                        // this.canvasContext.fillRect(mark[0] + boundingBox.x - 15, mark[1] + boundingBox.y - 15, 30, 30);
+                        this.canvasContext.arc(mark[0] + boundingBox.x , mark[1] + boundingBox.y, 12, 0, Math.PI*2);
+                        this.canvasContext.fill();
+                        //
+                        // this.canvasContext.fillStyle = "rgba(57,255,20, 1)";
+                        //
+                        // this.canvasContext.arc(mark[0] + boundingBox.x, mark[1] + boundingBox.y, 10, 0, Math.PI * 2);
+                        // this.canvasContext.fill();
+                    }
+                } else {
+                    this.canvasContext.beginPath();
+                    this.canvasContext.fillStyle = 'red';
+                    this.canvasContext.lineWidth = 8;
+                    this.canvasContext.fillRect(landMark[0] + boundingBox.x - 25, landMark[1] + boundingBox.y - 25, 50, 50);
+                    this.canvasContext.stroke();
+                }
             }
         }
     }

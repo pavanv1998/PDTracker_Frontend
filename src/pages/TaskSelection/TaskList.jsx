@@ -5,7 +5,8 @@ import {useState} from "react";
 
 const taskOptions = [
     { label: 'Gait', value: 'Gait' },
-    { label: 'Hand movement', value: 'Hand movement' },
+    { label: 'Hand movement - Left', value: 'Hand movement - Left' },
+    { label: 'Hand movement - Right', value: 'Hand movement - Right' },
     { label: 'Dynamic tremor', value: 'Dynamic tremor' },
     { label: 'Mouth Opening', value: 'Mouth Opening' },
     { label: 'Toe tapping - Left', value: 'Toe tapping - Left' },
@@ -13,7 +14,8 @@ const taskOptions = [
     { label: 'Passage', value: 'Passage' },
     { label: 'Free speech', value: 'Free speech' },
     { label: 'Hand Tremor', value: 'Hand Tremor' },
-    { label: 'Finger Tap', value: 'Finger Tap' },
+    { label: 'Finger Tap - Left', value: 'Finger Tap - Left' },
+    { label: 'Finger Tap - Right', value: 'Finger Tap - Right' },
     { label: 'Hand pronation', value: 'Hand pronation' },
     { label: 'Phonation', value: 'Phonation' },
     { label: 'Postural tremor', value: 'Postural tremor' },
@@ -99,17 +101,26 @@ const Task = ({task, onFieldChange, onTaskDelete, onTimeMark, onTimeClick, optio
 const TaskListLabels = ({resetTaskSelection}) => {
     return (
         <div className={"flex justify-between gap-2 items-center"}>
-            <div className={"pl-2 font-bold"}>Task name</div>
-            <div className={"pl-2 font-bold"}>Start time</div>
-            <div className={"pl-2 font-bold"}>End time</div>
+            <div className={"font-bold"}>Task name</div>
+            <div className={"font-bold"}>Start time</div>
+            <div className={"font-bold"}>End time</div>
             {/*<div className={"rounded-md bg-gray-800 text-white p-2 px-4 opacity-0 disabled"}>+ </div>*/}
-            <button
-                className={"p-2 pl-2 px-4 rounded-md bg-blue-600 text-white font-bold flex flex-row gap-2"}
-                onClick={resetTaskSelection}
-                // onClick={() => onTaskDelete(task)}
-            >
-                <RestartAlt/> Reset
-            </button>
+            <div className={"flex gap-2"}>
+                <button
+                    className={"p-2 pl-2 px-4 rounded-md bg-blue-600 text-white font-bold flex flex-row gap-2"}
+                    onClick={resetTaskSelection}
+                    // onClick={() => onTaskDelete(task)}
+                >
+                    <RestartAlt/>
+                </button> 
+                <button
+                    className={"p-2 pl-2 px-4 rounded-md bg-blue-600 text-white font-bold flex flex-row gap-2"}
+                    onClick={resetTaskSelection}
+                    // onClick={() => onTaskDelete(task)}
+                >
+                    <RestartAlt/> Reset
+                </button>
+            </div>
         </div>
     )
 }
