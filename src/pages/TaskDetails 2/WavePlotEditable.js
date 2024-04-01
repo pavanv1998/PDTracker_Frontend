@@ -816,7 +816,7 @@ const WavePlotEditable = ({ taskRecord, videoRef, onClose, startTime, endTime, h
                     dragmode: 'pan',
                     //dragmode: 'lasso',
                     xaxis: { title: 'Time [s]', range: [startTime, endTime] },
-                    yaxis: { title: 'Distance [m]' },
+                    yaxis: { title: 'Distance' },
                     responsive: true,
                     autosize: false,
                     datarevision: revision, // datarevision helps to update the plot when the data is updated 

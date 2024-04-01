@@ -51,7 +51,7 @@ const TaskSelectionTab = ({tasks, setBoundingBoxes, setTasks, setFPS, setTaskBox
     }
 
     return (
-        <div className={"flex p-2 flex-1 max-h-[60%] w-full flex-col "}>
+        <div className={"flex p-2 flex-1 h-full w-full flex-col "}>
             {
                 isVideoReady && !tasksReady
                 &&
