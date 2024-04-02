@@ -308,15 +308,42 @@ export class CanvasDrawer {
 
             let updatedLandMarks = [...this.landMarks];
 
-            updatedLandMarks[this.currentFrame - frameOffset] = [x,y];
+            let landMark = updatedLandMarks[this.currentFrame - frameOffset]
+
+            if (landMark !== null && Array.isArray(landMark) && landMark.length >= 2) {
+
+                if(Array.isArray(landMark[0])){
+                    let x1 = landMark[0][0];
+                    let y1 = landMark[0][1];
+
+                    let index = 0;
+
+                    let minDist = Math.sqrt( Math.pow((x1-x), 2) + Math.pow((y1-y), 2) );
+
+                    for(let i = 1; i<landMark.length; i++){
+                        x1 = landMark[i][0];
+                        y1 = landMark[i][1];
+
+                        let dist = Math.sqrt( Math.pow((x1-x), 2) + Math.pow((y1-y), 2) );
+
+                        if(dist < minDist){
+                            index = i;
+                        }
+                    }
+                    landMark[index] = [x,y];
+                    updatedLandMarks[this.currentFrame - frameOffset] = landMark;
+                }
+                else{
+                    updatedLandMarks[this.currentFrame - frameOffset] = [x,y];
+                }
+            }
 
             this.setLandMarks(updatedLandMarks);
         } else
             return null;
 
-
-
     }
+
     handleMouseMove(e) {
         let [x,y] = this.getXY(e);
 
@@ -344,7 +371,6 @@ export class CanvasDrawer {
                 }
             } else if (this.screen === 'taskDetails') {
                 let boundingBox = this.taskBoxes[this.selectedTask];
-
                 this.moveLandMark(x - boundingBox.x, y - boundingBox.y);
             }
         } else {
@@ -412,11 +438,23 @@ export class CanvasDrawer {
             const landMark = this.getCurrentLandMark();
             if (landMark !== null && Array.isArray(landMark) && landMark.length >= 2) {
 
-                let landMarkLeft = landMark[0] + boundingBox.x;
-                let landMarkTop = landMark[1] + boundingBox.y;
+                if(Array.isArray(landMark[0])){
+                    for(let i = 0; i<landMark.length; i++){
+                        let landMarkLeft = landMark[i][0] + boundingBox.x;
+                        let landMarkTop = landMark[i][1] + boundingBox.y;
 
-                if ((x >= landMarkLeft - 25 && x <= landMarkLeft + 25) && (y >= landMarkTop - 25 && y <= landMarkTop + 25 ))
-                    return 'move';
+                        if ((x >= landMarkLeft - 25 && x <= landMarkLeft + 25) && (y >= landMarkTop - 25 && y <= landMarkTop + 25 ))
+                            return 'move';
+                        }
+                }
+                else{
+                    let landMarkLeft = landMark[0] + boundingBox.x;
+                    let landMarkTop = landMark[1] + boundingBox.y;
+
+                    if ((x >= landMarkLeft - 25 && x <= landMarkLeft + 25) && (y >= landMarkTop - 25 && y <= landMarkTop + 25 ))
+                        return 'move';
+                }
+                
             }
         }
 

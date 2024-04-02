@@ -9,6 +9,23 @@ import scatterPlotData from "./scatterPlot.json";
 import PlotWidget from "./PlotWidget.js";
 import {RestartAlt, TouchApp} from '@mui/icons-material';
 
+function useDebounce(callback, delay) {
+    const argsRef = useRef();
+    const timeout = useRef();
+
+    function debouncedFunction(...args) {
+        argsRef.current = args;
+        clearTimeout(timeout.current);
+        timeout.current = setTimeout(() => {
+            if (argsRef.current) {
+                callback(...argsRef.current);
+            }
+        }, delay);
+    }
+
+    return debouncedFunction;
+}
+
 const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoData, boundingBoxes, setBoundingBoxes, setElement, taskBoxes, fps, setFPS }) => {
     const videoRef = useRef(null);
     const [videoReady, setVideoReady] = useState(false);
@@ -23,6 +40,7 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
     const [landMarks, setLandMarks] = useState([]);
     const [normalizationLandMarks, setNormalizationLandMarks] = useState([]);
     const [normalizationFactor, setNormalizationFactor] = useState();
+    
     const tasks = taskBoxes;
 
     useEffect(() => {
@@ -128,7 +146,18 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
         }
     }
 
-    const update_LandMarks = async () => {
+
+    const resetTask = () => {
+        let newTaskToPlotMap = {...taskToPlotMap};
+
+        if (newTaskToPlotMap.hasOwnProperty(selectedTaskName)) {
+            newTaskToPlotMap[selectedTaskName] = null;
+            setTaskToPlotMap(newTaskToPlotMap);
+        }
+    }
+
+    // Debounced function for updating landmarks to backend
+    const debouncedUpdateLandmarks = useDebounce(async (newLandMarks) => {
         try {
 
             const taskData = tasks[selectedTask];
@@ -164,34 +193,25 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
             } else {
                 throw new Error('Server responded with an error!');
             }
-        } catch (error) {
-            console.error("Failed to fetch projects:", error);
-        }
+    } catch (error) {
+        console.error("Failed to fetch projects:", error);
     }
+    }, 1000);
 
-    const resetTask = () => {
-        let newTaskToPlotMap = {...taskToPlotMap};
-
-        if (newTaskToPlotMap.hasOwnProperty(selectedTaskName)) {
-            newTaskToPlotMap[selectedTaskName] = null;
-            setTaskToPlotMap(newTaskToPlotMap);
-        }
-    }
-
-    const updateLandMarks = (newLandMarks) => {
-        let newTaskToPlotMap = {...taskToPlotMap};
-
+    const updateNewLandMarks = (newLandMarks) => {
+        let newTaskToPlotMap = { ...taskToPlotMap };
+    
         if (newTaskToPlotMap.hasOwnProperty(selectedTaskName)) {
             newTaskToPlotMap[selectedTaskName].landMarks = newLandMarks;
             setTaskToPlotMap(newTaskToPlotMap);
         }
-
-        update_LandMarks();
-
     }
 
-
-
+    const handleLandMarksChange = (newLandMarks) => {
+        setLandMarks(newLandMarks);
+        updateNewLandMarks(newLandMarks);
+        debouncedUpdateLandmarks(newLandMarks);
+    };
 
     return (
         <div className="flex flex-col min-h-screen max-h-screen">
@@ -212,7 +232,7 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
                         setFileName={setFileName}
                         setVideoURL={setVideoURL}
                         landMarks={taskToPlotMap[selectedTaskName]?.landMarks}
-                        setLandMarks={updateLandMarks}
+                        setLandMarks={handleLandMarksChange}
                         setTaskBoxes={() => {}}
                         selectedTask={selectedTask}
                     />
