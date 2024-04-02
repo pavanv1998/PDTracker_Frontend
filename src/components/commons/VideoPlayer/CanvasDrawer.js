@@ -327,6 +327,7 @@ export class CanvasDrawer {
                         let dist = Math.sqrt( Math.pow((x1-x), 2) + Math.pow((y1-y), 2) );
 
                         if(dist < minDist){
+                            minDist = dist;
                             index = i;
                         }
                     }
