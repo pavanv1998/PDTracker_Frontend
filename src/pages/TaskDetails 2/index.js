@@ -164,11 +164,11 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
             let uploadData = new FormData();
 
             let jsonData = {
+                task_name: selectedTaskName,
                 start_time: taskData.start,
                 end_time: taskData.end,
                 fps: fps,
                 landmarks: taskToPlotMap[selectedTaskName].landMarks,
-                normalization_landmarks: taskToPlotMap[selectedTaskName].normalizationLandMarks,
                 normalization_factor : taskToPlotMap[selectedTaskName].normalization_factor
             };
 
