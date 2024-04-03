@@ -34,8 +34,8 @@ const HeaderSection = ({title, isVideoReady, boundingBoxes, persons, fileName, f
                 isVideoReady
                 &&
                 <div className="flex gap-2">
-                    <Button className={"font-semibold"} onClick={downloadConfig}><Download/> Config</Button>
-                    <Button className={"font-semibold"} onClick ={moveToNextScreen}>Proceed <NavigateNext/></Button>
+                    {/* <Button className={"font-semibold"} onClick={downloadConfig}><Download/> Config</Button>
+                    <Button className={"font-semibold"} onClick ={moveToNextScreen}>Proceed <NavigateNext/></Button> */}
                 </div>
             }
         </div>

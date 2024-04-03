@@ -7,7 +7,7 @@ import wavesData from "./waveData.json";
 import peaksData from "./peaks.json";
 import scatterPlotData from "./scatterPlot.json";
 import PlotWidget from "./PlotWidget.js";
-import {RestartAlt, TouchApp} from '@mui/icons-material';
+import {RestartAlt,CloudDownload, TouchApp} from '@mui/icons-material';
 
 function useDebounce(callback, delay) {
     const argsRef = useRef();
@@ -156,6 +156,39 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
         }
     }
 
+    const DownloadCurrentTask = () => {
+        const fileData = taskToPlotMap[selectedTaskName];
+
+        const downloadContent = {
+            linePlot: fileData.linePlot,
+            peaks: fileData.peaks,
+            valleys : fileData.valleys,
+            valleys_start: fileData.valleys_start,
+            valleys_end: fileData.valleys_end,
+            radar: {
+                ...fileData.radar,
+                velocity : fileData.radar.velocity
+            },
+            radarTable: fileData.radarTable,
+            landMarks: fileData.landMarks,
+            normalization_landmarks: fileData.normalizationLandMarks,
+            normalization_factor: fileData.normalizationFactor
+
+        };
+        const json = JSON.stringify(downloadContent);
+        const blob = new Blob([json], {type: "application/json"});
+        const href = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.download = fileName.replace(/\.[^/.]+$/, "") + "_"+selectedTaskName + ".json";
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+    }
+
     // Debounced function for updating landmarks to backend
     const debouncedUpdateLandmarks = useDebounce(async (newLandMarks) => {
         try {
@@ -256,6 +289,13 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
                         >
                          <RestartAlt/> Reset
                         </button>
+                        { taskToPlotMap[selectedTaskName] != null && <button
+                            className={"p-2 pl-2 px-4 rounded-md bg-blue-600 text-white font-bold flex flex-row gap-2"}
+                            onClick={DownloadCurrentTask}
+                        >
+                         <CloudDownload/>
+                        </button>
+                        }
                     </div>
 
 
