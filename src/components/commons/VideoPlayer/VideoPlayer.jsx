@@ -23,7 +23,8 @@ const VideoPlayer = ({
                          landMarks,
                          setLandMarks,
                          selectedTask,
-                         postVideoLoad
+                         postVideoLoad,
+                         frameOffset
                      }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [zoomLevel, setZoomLevel] = useState(1);
@@ -33,7 +34,7 @@ const VideoPlayer = ({
 
     useEffect(() => {
         if (canvasRef.current && !canvasDrawerInstance.current) {
-            canvasDrawerInstance.current = new CanvasDrawer(videoRef.current, canvasRef.current, boundingBoxes, fps, persons, zoomLevel, screen, taskBoxes, setTaskBoxes, selectedTask, landMarks, setLandMarks);
+            canvasDrawerInstance.current = new CanvasDrawer(videoRef.current, canvasRef.current, boundingBoxes, fps, persons, zoomLevel, screen, taskBoxes, setTaskBoxes, selectedTask, landMarks, setLandMarks, frameOffset);
         }
     }, [videoRef, boundingBoxes, fps]);
 
@@ -59,6 +60,12 @@ const VideoPlayer = ({
             canvasDrawerInstance.current.updateTaskBoxes(taskBoxes);
         }
     }, [taskBoxes]);
+
+    useEffect(() => {
+        if (canvasDrawerInstance.current) {
+            canvasDrawerInstance.current.updateFrameOffset(frameOffset);
+        }
+    })
 
     useEffect(() => {
         if (canvasDrawerInstance.current) {
@@ -126,7 +133,7 @@ const VideoPlayer = ({
         if (now === null || metadata === null)
             return;
 
-        canvasDrawerInstance.current = new CanvasDrawer(videoRef.current, canvasRef.current, boundingBoxes, fps, persons, zoomLevel, screen, taskBoxes, setTaskBoxes, selectedTask, landMarks, setLandMarks);
+        canvasDrawerInstance.current = new CanvasDrawer(videoRef.current, canvasRef.current, boundingBoxes, fps, persons, zoomLevel, screen, taskBoxes, setTaskBoxes, selectedTask, landMarks, setLandMarks, frameOffset);
 
         canvasRef.current.width = videoRef.current.videoWidth;
         canvasRef.current.height = videoRef.current.videoHeight;

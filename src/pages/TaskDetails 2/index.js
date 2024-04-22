@@ -40,6 +40,7 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
     const [landMarks, setLandMarks] = useState([]);
     const [normalizationLandMarks, setNormalizationLandMarks] = useState([]);
     const [normalizationFactor, setNormalizationFactor] = useState();
+    const [frameOffset, setFrameOffset] = useState(0);
     
     const tasks = taskBoxes;
 
@@ -268,6 +269,7 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
                         setLandMarks={handleLandMarksChange}
                         setTaskBoxes={() => {}}
                         selectedTask={selectedTask}
+                        frameOffset={frameOffset}
                     />
                 </div>
                 
@@ -296,6 +298,13 @@ const TaskDetails = ({ videoURL, setVideoURL, fileName, setFileName, setVideoDat
                          <CloudDownload/>
                         </button>
                         }
+                    </div>
+
+                    <div className={"flex items-center justify-center gap-2 mt-2 mb-4"}>
+                        <div className={"font-bold"}>Adjust frame offset</div>
+                        <button className={"p-2 bg-blue-700 px-4 text-white"} onClick={()=>{setFrameOffset(prevVal => prevVal - 1)}}>-</button>
+                        <div>{frameOffset}</div>
+                        <button className={"p-2 bg-blue-700 px-4 text-white"}  onClick={()=>{setFrameOffset(prevVal => prevVal + 1)}}>+</button>
                     </div>
 
 

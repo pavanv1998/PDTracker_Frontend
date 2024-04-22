@@ -1,7 +1,7 @@
 import {rgb} from "plotly.js/src/components/color";
 
 export class CanvasDrawer {
-    constructor(videoElement, canvasElement, boundingBoxes, fps, persons, zoomLevel, screen, taskBoxes, setTaskBoxes, selectedTask, landMarks, setLandMarks) {
+    constructor(videoElement, canvasElement, boundingBoxes, fps, persons, zoomLevel, screen, taskBoxes, setTaskBoxes, selectedTask, landMarks, setLandMarks, frameOffset) {
         this.videoElement = videoElement;
         this.canvasElement = canvasElement;
         this.canvasContext = canvasElement.getContext('2d');
@@ -18,6 +18,7 @@ export class CanvasDrawer {
         this.landMarks = landMarks;
         this.setLandMarks = setLandMarks;
         this.selectedTask = selectedTask;
+        this.frameOffset = frameOffset;
     }
 
     getBoundingBoxForCurrentFrame() {
@@ -40,9 +41,9 @@ export class CanvasDrawer {
 
         let currentTask = this.taskBoxes[this.selectedTask];
         if (currentTask) {
-            let frameOffset = Math.round(currentTask.start*this.fps);
+            let offSet = Math.round(currentTask.start*this.fps);
             if (this.landMarks)
-                return this.landMarks[ this.currentFrame - frameOffset];
+                return this.landMarks[ this.currentFrame - offSet];
         } else
             return null;
 
@@ -150,7 +151,7 @@ export class CanvasDrawer {
     }
 
     getFrameNumber(timestamp) {
-        return Math.round(timestamp * this.fps);
+        return Math.floor(timestamp * this.fps)  + (this.frameOffset ? this.frameOffset : 0);
     }
 
     checkIfSubject(id) {
@@ -219,6 +220,11 @@ export class CanvasDrawer {
 
     updateFPS(newFPS) {
         this.fps = newFPS;
+    }
+
+    updateFrameOffset(newOffset) {
+        this.frameOffset = newOffset;
+        this.drawFrame(this.videoElement.currentTime);
     }
 
     handleDragStart(e) {
